@@ -72,9 +72,9 @@ contract Task3 with Deployable {
     require(msg.from == self.jettonAddressB, "Jetton does not exists");
     if (sender() == self.owner) {
       if (msg.from == self.jettonAddressA) {
-        self.aAmount = self.aAmount + msg.amount;
+        self.aAmount = self.aAmount + (msg.amount * self.decimal);
       } else if (msg.from == self.jettonAddressB) {
-        self.bAmount = self.bAmount + msg.amount;
+        self.bAmount = self.bAmount + (msg.amount * self.decimal);
       }
     } else {
       if (msg.from == self.jettonAddressA) {
@@ -86,15 +86,15 @@ contract Task3 with Deployable {
               bounce: true, 
               body: TokenTransfer{queryId: 0, amount: (self.bAmount / self.aAmount) * msg.amount, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
           });
-          self.aAmount = self.aAmount + msg.amount;
-          self.bAmount = self.bAmount - ((self.bAmount / self.aAmount) * msg.amount);
+          self.aAmount = self.aAmount + (msg.amount * self.decimal);
+          self.bAmount = self.bAmount - ((self.bAmount / self.aAmount) * (msg.amount * self.decimal));
         } else {
           send(SendParameters{
               to: sender(),
               value: 0, 
               mode: SendIgnoreErrors, 
               bounce: true, 
-              body: TokenTransfer{queryId: 0, amount: msg.amount, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
+              body: TokenTransfer{queryId: 0, amount: (msg.amount * self.decimal), destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
           });
         }
       } else {
@@ -104,17 +104,17 @@ contract Task3 with Deployable {
               value: 0, 
               mode: SendIgnoreErrors, 
               bounce: true, 
-              body: TokenTransfer{queryId: 0, amount: (self.aAmount / self.bAmount) * msg.amount, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
+              body: TokenTransfer{queryId: 0, amount: (self.aAmount / self.bAmount) * (msg.amount * self.decimal), destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
           });
-          self.bAmount = self.bAmount + msg.amount;
-          self.aAmount = self.aAmount - ((self.aAmount / self.bAmount) * msg.amount);
+          self.bAmount = self.bAmount + (msg.amount * self.decimal);
+          self.aAmount = self.aAmount - ((self.aAmount / self.bAmount) * (msg.amount * self.decimal));
         } else {
           send(SendParameters{
               to: sender(),
               value: 0, 
               mode: SendIgnoreErrors, 
               bounce: true, 
-              body: TokenTransfer{queryId: 0, amount: msg.amount, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
+              body: TokenTransfer{queryId: 0, amount: (msg.amount * self.decimal), destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
           });
         }
       }
@@ -125,9 +125,9 @@ contract Task3 with Deployable {
     require(jetton != self.jettonAddressA, "Jetton does not exists");
     require(jetton != self.jettonAddressB, "Jetton does not exists");
     if (self.jettonAddressA == jetton) {
-      return self.bAmount * self.decimal / self.aAmount;
+      return self.bAmount / self.aAmount;
     } else {
-      return self.aAmount * self.decimal / self.bAmount;
+      return self.aAmount / self.bAmount;
     }
   }
   
