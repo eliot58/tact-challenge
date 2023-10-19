@@ -26,7 +26,7 @@ contract Task2 with Deployable {
   }
   
   receive(msg: Refund) {
-    require(context.sender() == self.admin, "Only admin is allowed to withdraw");
+    require(sender() == self.admin, "Only admin is allowed to withdraw");
     let sendMsg: Cell = beginCell()
             .storeUint(0x18, 6)
             .storeAddress(msg.sender)
@@ -42,7 +42,7 @@ contract Task2 with Deployable {
             .storeAddress(self.admin)
             .storeCoins(0)
             .storeUint(1, 1 + 4 + 4 + 64 + 32 + 1 + 1)
-            .storeRef(beginCell().storeAddress(context.sender()).storeRef(msg.asCell()).endCell())
+            .storeRef(beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell())
             .endCell();
     nativeSendMessage(sendMsg, 64);
   }
