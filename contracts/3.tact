@@ -68,11 +68,66 @@ contract Task3 with Deployable {
   }
 
   receive(msg: TokenNotification) {
+    if (sender() == self.owner) {
+      if (msg.from == self.jettonAddressA) {
+        self.aAmount = self.aAmount + msg.amount;
+      } else if (msg.from == self.jettonAddressB) {
+        self.bAmount = self.bAmount + msg.amount;
+      }
+    } else {
+      if (msg.from == self.jettonAddressA) {
+        if ((self.bAmount * self.decimal / self.aAmount) / decimal * msg.amount <= self.bAmount) {
+          send(SendParameters{
+              to: sender(),
+              value: 0, 
+              mode: SendIgnoreErrors, 
+              bounce: true, 
+              body: TokenTransfer{queryId: 0, amount: (self.aAmount * self.decimal / self.bAmount) / decimal * msg.amount, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
+          });
+        } else {
+          send(SendParameters{
+              to: msg.sender,
+              value: 0, 
+              mode: SendRemainingValue, 
+              bounce: true
+          });
+        }
+      } else if (msg.from == self.jettonAddressB) {
+        if ((self.aAmount * self.decimal / self.bAmount) / decimal * msg.amount <= self.aAmount) {
+          send(SendParameters{
+              to: sender(),
+              value: 0, 
+              mode: SendIgnoreErrors, 
+              bounce: true, 
+              body: TokenTransfer{queryId: 0, amount: (self.aAmount * self.decimal / self.bAmount) / decimal * msg.amount, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
+          });
+        } else {
+          send(SendParameters{
+              to: msg.sender,
+              value: 0, 
+              mode: SendRemainingValue, 
+              bounce: true
+          });
+        }
+      } else {
+        throw(290);
+      }
+    }
   } 
   
   get fun price(jetton: Address): Int { 
+    if (self.jettonAddressA == jetton) {
+      return  self.aAmount;
+    } else if (self.jettonAddressB == jetton) {
+      return self.bAmount;
+    }
   }
   
   get fun balance(jetton: Address): Int { 
+    if (self.jettonAddressA == jetton) {
+      return (self.bAmount * self.decimal / self.aAmount) / decimal;
+    } else if (self.jettonAddressB == jetton) {
+      return (self.aAmount * self.decimal / self.bAmount) / decimal;
+    }
   }
 }
