@@ -32,7 +32,7 @@ contract Task2 with Deployable {
             .storeAddress(msg.sender)
             .storeCoins(0)
             .storeUint(1, 1 + 4 + 4 + 64 + 32 + 1 + 1)
-            .endCell()
+            .endCell();
     nativeSendMessage(sendMsg, 64);
   }
 
@@ -43,7 +43,7 @@ contract Task2 with Deployable {
             .storeCoins(0)
             .storeUint(1, 1 + 4 + 4 + 64 + 32 + 1 + 1)
             .storeRef(beginCell().storeAddress(context.sender()).storeRef(msg.asCell()).endCell())
-            .endCell()
+            .endCell();
     nativeSendMessage(sendMsg, 64);
   }
 }
