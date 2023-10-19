@@ -78,7 +78,7 @@ contract Task3 with Deployable {
       }
     } else {
       if (msg.from == self.jettonAddressA) {
-        if ((self.bAmount * self.decimal / self.aAmount) / self.decimal * msg.amount <= self.bAmount) {
+        if ((self.bAmount / self.aAmount) * msg.amount <= self.bAmount) {
           send(SendParameters{
               to: sender(),
               value: 0, 
@@ -86,7 +86,7 @@ contract Task3 with Deployable {
               bounce: true, 
               body: TokenTransfer{queryId: 0, amount: (self.aAmount * self.decimal / self.bAmount) / self.decimal * msg.amount, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
           });
-          self.bAmount = self.bAmount - ((self.bAmount * self.decimal / self.aAmount) / self.decimal * msg.amount);
+          self.bAmount = self.bAmount - ((self.bAmount / self.aAmount) * msg.amount);
         } else {
           send(SendParameters{
               to: sender(),
@@ -97,7 +97,7 @@ contract Task3 with Deployable {
           });
         }
       } else {
-        if ((self.aAmount * self.decimal / self.bAmount) / self.decimal * msg.amount <= self.aAmount) {
+        if ((self.aAmount / self.bAmount) * msg.amount <= self.aAmount) {
           send(SendParameters{
               to: sender(),
               value: 0, 
@@ -105,7 +105,7 @@ contract Task3 with Deployable {
               bounce: true, 
               body: TokenTransfer{queryId: 0, amount: (self.aAmount * self.decimal / self.bAmount) / self.decimal * msg.amount, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
           });
-          self.aAmount = self.aAmount - ((self.aAmount * self.decimal / self.bAmount) / self.decimal * msg.amount);
+          self.aAmount = self.aAmount - ((self.aAmount / self.bAmount) * msg.amount);
         } else {
           send(SendParameters{
               to: sender(),
