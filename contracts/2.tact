@@ -33,7 +33,15 @@ contract Task2 with Deployable {
             .storeCoins(0)
             .storeUint(1, 1 + 4 + 4 + 64 + 32 + 1 + 1)
             .endCell();
-    nativeSendMessage(sendMsg, 64);
+      nativeSendMessage(sendMsg, 64);
+    } else {
+      let sendMsg: Cell = beginCell()
+            .storeUint(0x18, 6)
+            .storeAddress(sender())
+            .storeCoins(0)
+            .storeUint(1, 1 + 4 + 4 + 64 + 32 + 1 + 1)
+            .endCell();
+      nativeSendMessage(sendMsg, 64);
     }
   }
 
