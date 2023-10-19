@@ -129,7 +129,7 @@ contract Task3 with Deployable {
     require(jetton != self.jettonAddressB && jetton != self.jettonAddressA, "Jetton does not exists");
     if (self.jettonAddressA == jetton) {
       return  self.aAmount;
-    } else if (self.jettonAddressB == jetton) {
+    } else {
       return self.bAmount;
     }
   }
