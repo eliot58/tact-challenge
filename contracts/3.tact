@@ -82,7 +82,7 @@ contract Task3 with Deployable {
               value: 0, 
               mode: SendIgnoreErrors, 
               bounce: true, 
-              body: TokenTransfer{queryId: 0, amount: (self.aAmount * self.decimal / self.bAmount) / selfdecimal * msg.amount, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
+              body: TokenTransfer{queryId: 0, amount: (self.aAmount * self.decimal / self.bAmount) / self.decimal * msg.amount, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
           });
         } else {
           send(SendParameters{
