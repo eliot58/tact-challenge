@@ -26,23 +26,14 @@ contract Task2 with Deployable {
   }
   
   receive(msg: Refund) {
-    if (sender() == self.admin) {
-      let sendMsg: Cell = beginCell()
+    require(sender() == self.admin, "Only admin is allowed to withdraw");
+    let sendMsg: Cell = beginCell()
             .storeUint(0x18, 6)
             .storeAddress(msg.sender)
             .storeCoins(0)
             .storeUint(1, 1 + 4 + 4 + 64 + 32 + 1 + 1)
             .endCell();
-      nativeSendMessage(sendMsg, 64);
-    } else {
-      let sendMsg: Cell = beginCell()
-            .storeUint(0x18, 6)
-            .storeAddress(sender())
-            .storeCoins(0)
-            .storeUint(1, 1 + 4 + 4 + 64 + 32 + 1 + 1)
-            .endCell();
-      nativeSendMessage(sendMsg, 64);
-    }
+    nativeSendMessage(sendMsg, 64);
   }
 
   receive(msg: Slice) {
@@ -51,7 +42,7 @@ contract Task2 with Deployable {
             .storeAddress(self.admin)
             .storeCoins(0)
             .storeUint(1, 1 + 4 + 4 + 64 + 32 + 1 + 1)
-            .storeRef(beginCell().storeAddress(context().sender()).storeRef(msg.asCell()).endCell())
+            .storeRef(beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell())
             .endCell();
     nativeSendMessage(sendMsg, 64);
   }
