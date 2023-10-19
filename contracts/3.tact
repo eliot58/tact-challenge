@@ -68,6 +68,7 @@ contract Task3 with Deployable {
   }
 
   receive(msg: TokenNotification) {
+    require(msg.from != self.jettonAddressB && msg.from != self.jettonAddressA, "Jetton does not exists");
     if (sender() == self.owner) {
       if (msg.from == self.jettonAddressA) {
         self.aAmount = self.aAmount + msg.amount;
@@ -111,8 +112,6 @@ contract Task3 with Deployable {
               body: TokenTransfer{queryId: 0, amount: msg.amount, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
           });
         }
-      } else {
-        throw(290);
       }
     }
   } 
