@@ -94,7 +94,7 @@ contract Task3 with Deployable {
               body: TokenTransfer{queryId: 0, amount: msg.amount, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
           });
         }
-      } else if (msg.from == self.jettonAddressB) {
+      } else {
         if ((self.aAmount * self.decimal / self.bAmount) / self.decimal * msg.amount <= self.aAmount) {
           send(SendParameters{
               to: sender(),
@@ -117,18 +117,20 @@ contract Task3 with Deployable {
   } 
   
   get fun price(jetton: Address): Int { 
+    require(jetton != self.jettonAddressB && jetton != self.jettonAddressA, "Jetton does not exists");
     if (self.jettonAddressA == jetton) {
-      return  self.aAmount;
-    } else if (self.jettonAddressB == jetton) {
-      return self.bAmount;
+      return (self.bAmount * self.decimal / self.aAmount) / self.decimal;
+    } else {
+      return (self.aAmount * self.decimal / self.bAmount) / self.decimal;
     }
   }
   
   get fun balance(jetton: Address): Int { 
+    require(jetton != self.jettonAddressB && jetton != self.jettonAddressA, "Jetton does not exists");
     if (self.jettonAddressA == jetton) {
-      return (self.bAmount * self.decimal / self.aAmount) / self.decimal;
+      return  self.aAmount;
     } else if (self.jettonAddressB == jetton) {
-      return (self.aAmount * self.decimal / self.bAmount) / self.decimal;
+      return self.bAmount;
     }
   }
 }
