@@ -27,13 +27,12 @@ contract Task2 with Deployable {
   
   receive(msg: Refund) {
     require(sender() == self.admin, "Only admin is allowed to withdraw");
-    let sendMsg: Cell = beginCell()
-            .storeUint(0x18, 6)
-            .storeAddress(msg.sender)
-            .storeCoins(0)
-            .storeUint(1, 1 + 4 + 4 + 64 + 32 + 1 + 1)
-            .endCell();
-    nativeSendMessage(sendMsg, 64);
+    send(SendParameters{
+        to: msg.sender,
+        value: 0, 
+        mode: SendRemainingValue, 
+        bounce: true
+    });
   }
 
   receive(msg: Slice) {
