@@ -76,7 +76,7 @@ contract Task3 with Deployable {
       }
     } else {
       if (msg.from == self.jettonAddressA) {
-        if ((self.bAmount * self.decimal / self.aAmount) / decimal * msg.amount <= self.bAmount) {
+        if ((self.bAmount * self.decimal / self.aAmount) / self.decimal * msg.amount <= self.bAmount) {
           send(SendParameters{
               to: sender(),
               value: 0, 
@@ -93,7 +93,7 @@ contract Task3 with Deployable {
           });
         }
       } else if (msg.from == self.jettonAddressB) {
-        if ((self.aAmount * self.decimal / self.bAmount) / decimal * msg.amount <= self.aAmount) {
+        if ((self.aAmount * self.decimal / self.bAmount) / self.decimal * msg.amount <= self.aAmount) {
           send(SendParameters{
               to: sender(),
               value: 0, 
