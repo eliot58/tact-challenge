@@ -68,8 +68,6 @@ contract Task3 with Deployable {
   }
 
   receive(msg: TokenNotification) {
-    require(sender() == self.jettonAddressA, "Jetton does not exists");
-    require(sender() == self.jettonAddressB, "Jetton does not exists");
     if (msg.from == self.owner) {
       if (sender() == self.jettonAddressA) {
         self.aAmount = self.aAmount + msg.amount;
@@ -121,19 +119,15 @@ contract Task3 with Deployable {
     }
   } 
   
-  get fun price(jetton: Address): Int { 
-    require(jetton == self.jettonAddressA, "Jetton does not exists");
-    require(jetton == self.jettonAddressB, "Jetton does not exists");
+  get fun price(jetton: Address): Int {
     if (self.jettonAddressA == jetton) {
-      return self.bAmount / self.aAmount * self.decimal;
+      return self.bAmount * self.decimal / self.aAmount;
     } else {
-      return self.aAmount / self.bAmount * self.decimal;
+      return self.aAmount * self.decimal / self.bAmount;
     }
   }
   
-  get fun balance(jetton: Address): Int { 
-    require(jetton == self.jettonAddressA, "Jetton does not exists");
-    require(jetton == self.jettonAddressB, "Jetton does not exists");
+  get fun balance(jetton: Address): Int {
     if (self.jettonAddressA == jetton) {
       return self.aAmount;
     } else {
