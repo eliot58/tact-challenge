@@ -85,8 +85,8 @@ contract Task3 with Deployable {
               bounce: true, 
               body: TokenTransfer{queryId: 0, amount: (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
           });
-          // self.aAmount = self.aAmount + msg.amount;
-          // self.bAmount = self.bAmount - ((self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal);
+          self.aAmount = self.aAmount + msg.amount;
+          self.bAmount = self.bAmount - ((self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal);
         } else {
           send(SendParameters{
               to: sender(),
@@ -105,8 +105,8 @@ contract Task3 with Deployable {
               bounce: true, 
               body: TokenTransfer{queryId: 0, amount: (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
           });
-          // self.bAmount = self.bAmount + msg.amount;
-          // self.aAmount = self.aAmount - ((self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal);
+          self.bAmount = self.bAmount + msg.amount;
+          self.aAmount = self.aAmount - ((self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal);
         } else {
           send(SendParameters{
               to: sender(),
