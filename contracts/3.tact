@@ -80,7 +80,7 @@ contract Task3 with Deployable {
       if (msg.from == self.jettonAddressA) {
         if ((self.bAmount / self.aAmount) * msg.amount <= self.bAmount) {
           send(SendParameters{
-              to: self.jettonAddressA,
+              to: self.jettonAddressB,
               value: 0, 
               mode: SendRemainingValue, 
               bounce: true, 
@@ -100,7 +100,7 @@ contract Task3 with Deployable {
       } else {
         if ((self.aAmount / self.bAmount) * msg.amount <= self.aAmount) {
           send(SendParameters{
-              to: self.jettonAddressB,
+              to: self.jettonAddressA,
               value: 0, 
               mode: SendRemainingValue, 
               bounce: true, 
