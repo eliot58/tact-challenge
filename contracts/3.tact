@@ -77,7 +77,7 @@ contract Task3 with Deployable {
             value: 0, 
             mode: SendRemainingValue, 
             bounce: true, 
-            body: TokenTransfer{queryId: 0, amount: msg.amount, destination: self.owner, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
+            body: TokenTransfer{queryId: 0, amount: msg.amount, destination: myAddress(), responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
         });
       } else if (sender() == self.jettonAddressB) {
         self.bAmount = self.bAmount + msg.amount;
@@ -86,7 +86,7 @@ contract Task3 with Deployable {
             value: 0, 
             mode: SendRemainingValue, 
             bounce: true, 
-            body: TokenTransfer{queryId: 0, amount: msg.amount, destination: self.owner, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
+            body: TokenTransfer{queryId: 0, amount: msg.amount, destination: myAddress(), responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
         });
       }
       return;
