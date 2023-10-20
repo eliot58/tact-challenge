@@ -72,36 +72,26 @@ contract Task3 with Deployable {
     if (msg.from == self.owner) {
       if (sender() == self.jettonAddressA) {
         self.aAmount = self.aAmount + msg.amount;
-        send(SendParameters{
-            to: self.jettonAddressA,
-            value: 0, 
-            mode: SendRemainingValue, 
-            bounce: true, 
-            body: TokenTransfer{queryId: 0, amount: msg.amount, destination: myAddress(), responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
-        });
       } else if (sender() == self.jettonAddressB) {
         self.bAmount = self.bAmount + msg.amount;
-        send(SendParameters{
-            to: self.jettonAddressB,
-            value: 0, 
-            mode: SendRemainingValue, 
-            bounce: true, 
-            body: TokenTransfer{queryId: 0, amount: msg.amount, destination: myAddress(), responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
-        });
       }
       return;
     }
     if (sender() == self.jettonAddressA) {
-      if ((self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal < self.bAmount) {
+      let price: Int = 0;
+      if (self.aAmount != 0) {
+        price = (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
+      }
+      if (price <= self.bAmount) {
         send(SendParameters{
             to: self.jettonAddressB,
             value: 0, 
             mode: SendRemainingValue, 
             bounce: true, 
-            body: TokenTransfer{queryId: 0, amount: (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
+            body: TokenTransfer{queryId: 0, amount: price, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
         });
         self.aAmount = self.aAmount + msg.amount;
-        self.bAmount = self.bAmount - (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
+        self.bAmount = self.bAmount - price;
       } else {
         send(SendParameters{
             to: self.jettonAddressA,
@@ -112,16 +102,20 @@ contract Task3 with Deployable {
         });
       }
     } else {
-      if ((self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal < self.aAmount) {
+      let price: Int = 0;
+      if (self.bAmount != 0) {
+        price = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
+      }
+      if (price <= self.aAmount) {
         send(SendParameters{
             to: self.jettonAddressA,
             value: 0, 
             mode: SendRemainingValue, 
             bounce: true, 
-            body: TokenTransfer{queryId: 0, amount: (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
+            body: TokenTransfer{queryId: 0, amount: price, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
         });
         self.bAmount = self.bAmount + msg.amount;
-        self.aAmount = self.aAmount - (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
+        self.aAmount = self.aAmount - price;
       } else {
         send(SendParameters{
             to: self.jettonAddressB,
@@ -137,8 +131,14 @@ contract Task3 with Deployable {
   
   get fun price(jetton: Address): Int {
     if (self.jettonAddressA == jetton) {
+      if(self.aAmount == 0) {
+        return 0;
+      }
       return self.bAmount * self.decimal / self.aAmount;
     } else {
+      if(self.bAmount == 0) {
+        return 0;
+      }
       return self.aAmount * self.decimal / self.bAmount;
     }
   }
