@@ -135,6 +135,7 @@ contract Task3 with Deployable {
         return 0;
       }
       return self.bAmount * self.decimal / self.aAmount;
+      
     } else {
       if(self.bAmount == 0) {
         return 0;
