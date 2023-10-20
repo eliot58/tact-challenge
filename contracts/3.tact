@@ -90,7 +90,7 @@ contract Task3 with Deployable {
           self.bAmount = self.bAmount - (self.bAmount / self.aAmount) * msg.amount;
         } else {
           send(SendParameters{
-              to: sender(),
+              to: self.jettonAddressA,
               value: 0, 
               mode: SendRemainingValue, 
               bounce: true, 
@@ -110,7 +110,7 @@ contract Task3 with Deployable {
           self.aAmount = self.aAmount - (self.aAmount / self.bAmount) * msg.amount;
         } else {
           send(SendParameters{
-              to: sender(),
+              to: self.jettonAddressB,
               value: 0, 
               mode: SendRemainingValue, 
               bounce: true, 
