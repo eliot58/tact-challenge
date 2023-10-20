@@ -94,10 +94,10 @@ contract Task3 with Deployable {
             value: 0, 
             mode: SendRemainingValue, 
             bounce: true, 
-            body: TokenTransfer{queryId: 0, amount: msg.amount, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
+            body: TokenTransfer{queryId: 0, amount: msg.amount * self.decimal / self.decimal, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
         });
       }
-    } else if (sender() == self.jettonAddressB) {
+    } else {
       if ((self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal < self.aAmount) {
         send(SendParameters{
             to: self.jettonAddressA,
@@ -114,7 +114,7 @@ contract Task3 with Deployable {
             value: 0, 
             mode: SendRemainingValue, 
             bounce: true, 
-            body: TokenTransfer{queryId: 0, amount: msg.amount, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
+            body: TokenTransfer{queryId: 0, amount: msg.amount * self.decimal / self.decimal, destination: msg.from, responseDestination: myAddress(), customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice()}.toCell()
         });
       }
     }
